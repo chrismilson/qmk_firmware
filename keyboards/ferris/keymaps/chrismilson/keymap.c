@@ -15,24 +15,6 @@
 //     _______,          _______
 // )
 
-typedef enum {
-    TD_NONE,
-    TD_UNKNOWN,
-    TD_TAP,
-    TD_HOLD,
-} td_state_t;
-
-typedef struct {
-    bool is_press_action;
-    td_state_t state;
-} td_tap_t;
-
-#define TC_MBTN TC_MOUSE_BUTTON_TAP_LEFT_HOLD_RIGHT
-// Tap dance enums
-enum {
-    TC_MOUSE_BUTTON_TAP_LEFT_HOLD_RIGHT
-};
-
 enum layers {
     // The base layer for most english typing
     _QWERTY,
@@ -53,9 +35,12 @@ enum layers {
 enum {
     TO_SPECIAL = SAFE_RANGE,
     TO_NUMBERS,
+    TH_BTN,
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static uint16_t th_btn_timer;
+
     switch (keycode) {
         case TO_SPECIAL:
             if (record->event.pressed) {
@@ -67,6 +52,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 layer_move(_NUMBERS);
                 layer_on(_COMMON);
+            }
+            return false;
+        case TH_BTN:
+            if (record->event.pressed) {
+                th_btn_timer = timer_read();
+            } else {
+                if (timer_elapsed(th_btn_timer) < TAPPING_TERM) {
+                    tap_code(KC_BTN1);
+                } else {
+                    tap_code(KC_BTN2);
+                }
             }
             return false;
     }
@@ -95,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,         _______,        _______,        _______,        _______,
         _______,        _______,        _______,        _______,        KC_ENT,
 
-        TC_MBTN,        _______,        _______,        _______,        _______,
+        TH_BTN,         _______,        _______,        _______,        _______,
         _______,        _______,        _______,        _______,        KC_NO,
 
         _______,        TO(_QWERTY),
@@ -117,10 +113,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_ARROWS] = LAYOUT(
-        _______,        _______,        _______,        _______,        _______,
+        _______,        KC_WH_D,        KC_MS_U,        KC_WH_U,        RESET,
         _______,        _______,        _______,        _______,        _______,
 
-        _______,        _______,        _______,        RESET,          _______,
+        _______,        KC_MS_L,        KC_MS_D,        KC_MS_R,        _______,
         KC_LEFT,        KC_DOWN,        KC_UP,          KC_RGHT,        _______,
 
         _______,        _______,        _______,        _______,        _______,
@@ -132,7 +128,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NUMBERS] = LAYOUT(
         _______,        KC_MSTP,        KC_MPRV,        KC_MNXT,        _______,
-        _______,        KC_7,           KC_8,           KC_9,           KC_BSPC,
+        KC_UNDS,        KC_7,           KC_8,           KC_9,           KC_BSPC,
 
         _______,        KC_VOLD,        KC_VOLU,        KC_MPLY,        _______,
         KC_SPC,         KC_4,           KC_5,           KC_6,           KC_ENT,
@@ -157,42 +153,4 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,        _______,
         _______,        _______
     )
-};
-
-td_state_t current_dance(qk_tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_TAP;
-        // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
-        else return TD_HOLD;
-    }
-
-    return TD_UNKNOWN;
-}
-
-static td_tap_t mbtn_tap = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void mbtn_finished(qk_tap_dance_state_t *state, void *user_data) {
-    mbtn_tap.state = current_dance(state);
-
-    switch (mbtn_tap.state) {
-        case TD_TAP: register_code(KC_BTN1); break;
-        case TD_HOLD: register_code(KC_BTN2); break;
-        default: break;
-    }
-}
-
-void mbtn_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (mbtn_tap.state) {
-        case TD_TAP: unregister_code(KC_BTN1); break;
-        case TD_HOLD: unregister_code(KC_BTN2); break;
-        default: break;
-    }
-    mbtn_tap.state = TD_NONE;
-}
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [TC_MBTN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, mbtn_finished, mbtn_reset)
 };
