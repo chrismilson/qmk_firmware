@@ -100,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         _______,        TO(_QWERTY),
         _______,        _______
-    )
+    ),
 
 	[_SPECIAL] = LAYOUT(
         _______,        KC_AT,          KC_HASH,        KC_DLR,         KC_PERC,
@@ -128,7 +128,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         _______,        _______,
         _______,        _______
-    )
+    ),
 
     [_NUMBERS] = LAYOUT(
         _______,        KC_MSTP,        KC_MPRV,        KC_MNXT,        _______,
@@ -172,14 +172,15 @@ td_state_t current_dance(qk_tap_dance_state_t *state) {
 static td_tap_t mbtn_tap = {
     .is_press_action = true,
     .state = TD_NONE
-}
+};
 
 void mbtn_finished(qk_tap_dance_state_t *state, void *user_data) {
     mbtn_tap.state = current_dance(state);
 
-    switch (mbtn_tap) {
+    switch (mbtn_tap.state) {
         case TD_TAP: register_code(KC_BTN1); break;
         case TD_HOLD: register_code(KC_BTN2); break;
+        default: break;
     }
 }
 
@@ -187,6 +188,7 @@ void mbtn_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (mbtn_tap.state) {
         case TD_TAP: unregister_code(KC_BTN1); break;
         case TD_HOLD: unregister_code(KC_BTN2); break;
+        default: break;
     }
     mbtn_tap.state = TD_NONE;
 }
