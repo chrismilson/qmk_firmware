@@ -35,12 +35,9 @@ enum layers {
 enum {
     TO_SPECIAL = SAFE_RANGE,
     TO_NUMBERS,
-    TH_BTN,
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    static uint16_t th_btn_timer;
-
     switch (keycode) {
         case TO_SPECIAL:
             if (record->event.pressed) {
@@ -52,17 +49,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 layer_move(_NUMBERS);
                 layer_on(_COMMON);
-            }
-            return false;
-        case TH_BTN:
-            if (record->event.pressed) {
-                th_btn_timer = timer_read();
-            } else {
-                if (timer_elapsed(th_btn_timer) < TAPPING_TERM) {
-                    tap_code(KC_BTN1);
-                } else {
-                    tap_code(KC_BTN2);
-                }
             }
             return false;
     }
@@ -91,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,         _______,        _______,        _______,        _______,
         _______,        _______,        _______,        _______,        KC_ENT,
 
-        TH_BTN,         _______,        _______,        _______,        _______,
+        KC_BTN1,        _______,        _______,        _______,        _______,
         _______,        _______,        _______,        _______,        KC_NO,
 
         _______,        TO(_QWERTY),
