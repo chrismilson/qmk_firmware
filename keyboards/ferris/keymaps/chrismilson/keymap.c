@@ -1,19 +1,18 @@
 #include QMK_KEYBOARD_H
 
-// Transparent Layer
-// [n] = LAYOUT(
-//     _______,          _______,          _______,          _______,          _______,
-//     _______,          _______,          _______,          _______,          _______,
-
-//     _______,          _______,          _______,          _______,          _______,
-//     _______,          _______,          _______,          _______,          _______,
-
-//     _______,          _______,          _______,          _______,          _______,
-//     _______,          _______,          _______,          _______,          _______,
-
-//     _______,          _______,
-//     _______,          _______
-// )
+// The keys in the middle of the board stay in the same orientation, but the
+// inside and outside columns are mirrored.
+#define MATCHING_LAYOUT( \
+    L01, L02, L03, L04, L05, \
+    L06, L07, L08, L09, L10, \
+    L11, L12, L13, L14, L15, \
+                   L16, L17 \
+) LAYOUT( \
+    L01, L02, L03, L04, L05, L05, L02, L03, L04, L01, \
+    L06, L07, L08, L09, L10, L10, L07, L08, L09, L06, \
+    L11, L12, L13, L14, L15, L15, L12, L13, L14, L11, \
+                   L16, L17, L17, L16 \
+)
 
 enum layers {
     // The base layer for most english typing
@@ -30,6 +29,16 @@ enum layers {
     // Keys often required while using numbers on the right hand - plus, minus, etc.
     // Function keys on the left hand
     _NUMBERS_AUX,
+
+    // EPHEMERAL LAYERS
+    // The following layers are not in the same spirit as the rest of the board,
+    // and thus are more difficult to access in everyday use.
+    // The EPHEMERAL_HOME layer can be reached from the normal layers, and the
+    // other ephemeral layers can be reached from there.
+    _EPHEMERAL_HOME,
+    // A layer to allow the smooth play of sudoku with a single (Either) hand.
+    _SUDOKU,
+    _SUDOKU_AUX,
 };
 
 enum {
@@ -105,7 +114,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,        KC_MS_L,        KC_MS_D,        KC_MS_R,        _______,
         KC_LEFT,        KC_DOWN,        KC_UP,          KC_RGHT,        _______,
 
-        _______,        _______,        _______,        _______,        _______,
+        _______,        _______,        _______,        _______,        TO(_EPHEMERAL_HOME),
         _______,        _______,        _______,        _______,        _______,
 
         _______,        _______,
@@ -137,6 +146,34 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,        KC_MINS,        KC_SLSH,        KC_COMM,        KC_NO,
 
         _______,        _______,
+        _______,        _______
+    ),
+
+    [_EPHEMERAL_HOME] = LAYOUT(
+        TO(_SUDOKU),    _______,        _______,        _______,        _______,
+        _______,        _______,        _______,        _______,        _______,
+
+        _______,        _______,        _______,        _______,        _______,
+        _______,        _______,        _______,        _______,        _______,
+
+        _______,        _______,        _______,        _______,        _______,
+        _______,        _______,        _______,        _______,        _______,
+
+        _______,        TO(_QWERTY),
+        TO_SPECIAL,     _______
+    ),
+
+    [_SUDOKU] = MATCHING_LAYOUT(
+        KC_BSPC,        KC_7,           KC_8,           KC_9,           TO(_QWERTY),
+        MO(_SUDOKU_AUX),KC_4,           KC_5,           KC_6,           KC_SPC,
+        MO(_SUDOKU_AUX),KC_1,           KC_2,           KC_3,           _______,
+        KC_LSFT,        KC_LCTL
+    ),
+
+    [_SUDOKU_AUX] = MATCHING_LAYOUT(
+        _______,        LCTL_T(KC_Z),   KC_UP,          LCTL_T(KC_Y),   _______,
+        _______,        KC_LEFT,        KC_DOWN,        KC_RGHT,        _______,
+        _______,        _______,        _______,        _______,        _______,
         _______,        _______
     )
 };
