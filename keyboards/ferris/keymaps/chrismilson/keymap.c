@@ -26,6 +26,9 @@ enum layers {
     // A layer to allow the smooth play of sudoku with a single (Either) hand.
     _SUDOKU,
     _SUDOKU_AUX,
+    // A layer for computer games that use the left hand on the keyboard.
+    _WASD,
+    _WASD_AUX,
 };
 
 enum {
@@ -126,7 +129,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_EPHEMERAL_HOME] = LAYOUT(
-        TO(_SUDOKU),    _______,        _______,        _______,        _______,
+        TO(_SUDOKU),    TO(_WASD),      _______,        _______,        _______,
         _______,        _______,        _______,        _______,        _______,
 
         _______,        _______,        _______,        _______,        _______,
@@ -151,5 +154,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,        KC_LEFT,        KC_DOWN,        KC_RGHT,        _______,
         _______,        _______,        _______,        _______,        _______,
         _______,        _______
+    ),
+
+    [_WASD] = LAYOUT(
+        KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+        KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,      KC_H,    KC_J,    LALT_K,  KC_L,    KC_SCLN,
+        KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,
+                          MO(_WASD_AUX),    KC_SPC,    TO_SPEC, KC_LSFT
+    ),
+
+    [_WASD_AUX] = LAYOUT(
+        KC_ESC,  KC_7,    KC_8,    KC_9,    KC_WH_U,   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+        KC_LSFT, KC_4,    KC_5,    KC_6,    KC_WH_D,   KC_H,    KC_J,    LALT_K,  KC_L,    KC_SCLN,
+        KC_LCTL, KC_1,    KC_2,    KC_3,    KC_V,      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,
+                                   _______, KC_SPC,    TO_SPEC, KC_LSFT
     )
 };
