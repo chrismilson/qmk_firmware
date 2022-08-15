@@ -144,16 +144,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_SUDOKU] = MATCHING_LAYOUT(
         KC_BSPC,        KC_7,           KC_8,           KC_9,           TO(_QWERTY),
-        MO(_SUDOKU_AUX),KC_4,           KC_5,           KC_6,           KC_SPC,
-        MO(_SUDOKU_AUX),KC_1,           KC_2,           KC_3,           _______,
+        TO(_QWERTY),    KC_4,           KC_5,           KC_6,           KC_SPC,
+        TO(_QWERTY),    KC_1,           KC_2,           KC_3,           _______,
         KC_LSFT,        KC_LCTL
-    ),
-
-    [_SUDOKU_AUX] = MATCHING_LAYOUT(
-        _______,        LCTL_T(KC_Z),   KC_UP,          LCTL_T(KC_Y),   _______,
-        _______,        KC_LEFT,        KC_DOWN,        KC_RGHT,        _______,
-        _______,        _______,        _______,        _______,        _______,
-        _______,        _______
     ),
 
     [_WASD] = LAYOUT(
