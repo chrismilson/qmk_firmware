@@ -31,38 +31,19 @@ enum layers {
     _WASD_AUX,
 };
 
-enum {
-    TO_SPECIAL = SAFE_RANGE,
-    TO_NUMBERS,
-};
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case TO_SPECIAL:
-            if (record->event.pressed) {
-                layer_move(_SPECIAL);
-                layer_on(_COMMON);
-            }
-            return false;
-        case TO_NUMBERS:
-            if (record->event.pressed) {
-                layer_move(_NUMBERS);
-                layer_on(_COMMON);
-            }
-            return false;
-    }
-    return true;
-}
-
 #define TO_BASE TO(_QWERTY)
-#define TO_SPEC TO_SPECIAL
-#define LCTL_F LCTL_T(KC_F)
-#define LCTL_J LCTL_T(KC_J)
-#define LALT_D LALT_T(KC_D)
-#define LALT_K LALT_T(KC_K)
+#define TO_SPEC TO(_SPECIAL)
+#define TO_NUMS TO(_NUMBERS)
 #define TG_ARRW TG(_ARROWS)
 #define EP_HOME TO(_EPHEMERAL_HOME)
 #define OS_NUMX OSL(_NUMBERS_AUX)
+
+#define CTL_SLS LCTL_T(KC_SLSH)
+#define CTL_Z LCTL_T(KC_Z)
+#define ALT_X LALT_T(KC_X)
+#define ALT_DOT LALT_T(KC_DOT)
+
+#define KC_CLN 
 
 // The keys in the middle of the board stay in the same orientation, but the
 // inside and outside columns are mirrored.
@@ -95,8 +76,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_QWERTY] = LAYOUT(
         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-        KC_A,    KC_S,    LALT_D,  LCTL_F,  KC_G,      KC_H,    LCTL_J,  LALT_K,  KC_L,    KC_SCLN,
-        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,
+        KC_A,    KC_S,    KC_D,    KC_F,    KC_G,      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,
+        CTL_Z,   ALT_X,   KC_C,    KC_V,    KC_B,      KC_N,    KC_M,    KC_COMM, ALT_DOT, CTL_SLS,
                                    KC_LGUI, KC_SPC,    TO_SPEC, KC_LSFT
     ),
 
@@ -104,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,   KC_CIRC, KC_AMPR, KC_ASTR, KC_TILD, _______,
         _______, KC_EXLM, KC_EQL,  KC_MINS, KC_QUOT,   KC_GRV,  KC_BSLS, KC_LCBR, KC_RCBR, _______,
         _______, _______, KC_PLUS, KC_UNDS, KC_DQUO,   KC_LPRN, KC_RPRN, KC_LBRC, KC_RBRC, TG_ARRW,
-                                   _______, _______,   TO_NUMBERS, _______
+                                   _______, _______,   TO_NUMS, _______
     ),
 
     [_ARROWS] = LAYOUT_SUPER(
@@ -118,14 +99,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_MSTP, KC_MPRV, KC_MNXT, _______,   KC_UNDS, KC_7,    KC_8,    KC_9,    KC_BSPC,
         _______, KC_VOLD, KC_VOLU, KC_MPLY, _______,   KC_SPC,  KC_4,    KC_5,    KC_6,    KC_ENT,
         _______, KC_BRID, KC_BRIU, KC_MUTE, _______,   KC_0,    KC_1,    KC_2,    KC_3,    OS_NUMX,
-                                   _______, _______,   TO_SPECIAL, _______
+                                   _______, _______,   TO_SPEC, _______
     ),
 
     [_NUMBERS_AUX] = LAYOUT_SUPER(
-        _______, KC_F7,   KC_F8,   KC_F9,   KC_F12,   _______, _______, _______, _______, _______,
-        _______, KC_F4,   KC_F5,   KC_F6,   KC_F11,   _______, KC_PLUS, KC_ASTR, KC_DOT,  _______,
-        _______, KC_F1,   KC_F2,   KC_F3,   KC_F10,   _______, KC_MINS, KC_SLSH, KC_COMM, KC_NO,
-                                  _______, _______,   _______, _______
+        _______, KC_F7,   KC_F8,   KC_F9,   KC_F12,    _______, _______, _______, _______, _______,
+        _______, KC_F4,   KC_F5,   KC_F6,   KC_F11,    _______, KC_PLUS, KC_ASTR, KC_DOT,  _______,
+        _______, KC_F1,   KC_F2,   KC_F3,   KC_F10,    KC_COLN, KC_MINS, KC_SLSH, KC_COMM, KC_NO,
+                                   _______, _______,   _______, _______
     ),
 
     [_EPHEMERAL_HOME] = LAYOUT(
