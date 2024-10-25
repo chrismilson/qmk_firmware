@@ -26,6 +26,9 @@ enum layers {
     // A layer for computer games that use the left hand on the keyboard.
     _WASD,
     _WASD_AUX,
+    // A layer for computer games that use both hands on the keyboard.
+    _WASD_ARROWS,
+    _WASD_ARROWS_AUX,
 };
 
 #define EP_HOME TO(_EPHEMERAL_HOME)
@@ -105,14 +108,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_EPHEMERAL_HOME] = LAYOUT(
-        TO(_SUDOKU),    TO(_WASD),      _______,        _______,        _______,
-        _______,        _______,        _______,        _______,        _______,
+        TO(_SUDOKU), TO(_WASD), TO(_WASD_ARROWS), _______,        _______,
+        _______,     _______,   _______,          _______,        _______,
 
-        _______,        _______,        _______,        _______,        _______,
-        _______,        _______,        _______,        _______,        _______,
+        _______,     _______,   _______,          _______,        _______,
+        _______,     _______,   _______,          _______,        _______,
 
-        _______,        _______,        _______,        _______,        _______,
-        _______,        _______,        _______,        _______,        _______,
+        _______,     _______,   _______,          _______,        _______,
+        _______,     _______,   _______,          _______,        _______,
 
         _______,        TO(_QWERTY),
         TO(_SPECIAL),   _______
@@ -133,6 +136,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [_WASD_AUX] = LAYOUT(
+        _______, KC_7,    KC_8,    KC_9,    KC_WH_U,   _______, _______, _______, _______, _______,
+        _______, KC_4,    KC_5,    KC_6,    KC_WH_D,   _______, _______, _______, _______, _______,
+        _______, KC_1,    KC_2,    KC_3,    _______,   _______, _______, _______, _______, _______,
+                                   _______, _______,   TO(_QWERTY), _______
+    ),
+
+    [_WASD_ARROWS] = LAYOUT(
+        KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,      _______, _______, KC_UP, _______, _______,
+        KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,      _______, KC_LEFT, KC_DOWN, KC_RIGHT, _______,
+        KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,      _______, _______, _______, _______, _______,
+                   MO(_WASD_ARROWS_AUX),    KC_SPC,    TO(_QWERTY), _______
+    ),
+
+    [_WASD_ARROWS_AUX] = LAYOUT(
         _______, KC_7,    KC_8,    KC_9,    KC_WH_U,   _______, _______, _______, _______, _______,
         _______, KC_4,    KC_5,    KC_6,    KC_WH_D,   _______, _______, _______, _______, _______,
         _______, KC_1,    KC_2,    KC_3,    _______,   _______, _______, _______, _______, _______,
