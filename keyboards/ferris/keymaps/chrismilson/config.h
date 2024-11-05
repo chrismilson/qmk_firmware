@@ -37,5 +37,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Pick good defaults for enabling homerow modifiers
 #define TAPPING_TERM 200
 #define PERMISSIVE_HOLD
-#define IGNORE_MOD_TAP_INTERRUPT
+#define QUICK_TAP_TERM 0 // nonzero quick tap is ew with the layer mod tap keys on space and backspace
 #define TAPPING_FORCE_HOLD
